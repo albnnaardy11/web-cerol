@@ -1,68 +1,104 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit User') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="font-extrabold text-3xl text-slate-900 leading-tight tracking-tight">
+                    Edit User
+                </h2>
+                <p class="text-slate-500 text-sm mt-1 font-medium">Update account information for {{ $user->name }}</p>
+            </div>
+            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center px-6 py-3 bg-slate-100 text-slate-700 font-bold rounded-2xl hover:bg-slate-200 transition-all">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to List
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form action="{{ route('admin.users.update', $user) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="mb-4">
-                            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-                            <input type="text" name="name" id="name" value="{{ $user->name }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required>
+    <div class="py-12 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/30 min-h-screen">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white rounded-[3rem] p-12 shadow-lg shadow-slate-100 border border-slate-100">
+                <form action="{{ route('admin.users.update', $user) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
+                    <!-- Icon Header -->
+                    <div class="flex items-center justify-center mb-10">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-3xl flex items-center justify-center text-white text-3xl shadow-lg shadow-blue-200">
+                            <i class="fas fa-user-edit"></i>
                         </div>
-                        <div class="mb-4">
-                            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username
-                                (optional):</label>
-                            <input type="text" name="username" id="username" value="{{ $user->username }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <!-- Form Fields -->
+                    <div class="space-y-8 mb-12">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label for="name" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 ml-4">Full Name *</label>
+                                <input type="text" name="name" id="name" value="{{ $user->name }}" required
+                                    class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-emerald-200 text-sm font-bold placeholder:text-slate-300 transition-all"
+                                    placeholder="Enter full name">
+                            </div>
+                            
+                            <div>
+                                <label for="username" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 ml-4">Username (Optional)</label>
+                                <input type="text" name="username" id="username" value="{{ $user->username }}"
+                                    class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-emerald-200 text-sm font-bold placeholder:text-slate-300 transition-all"
+                                    placeholder="Enter username">
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                            <input type="email" name="email" id="email" value="{{ $user->email }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label for="email" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 ml-4">Email Address *</label>
+                                <input type="email" name="email" id="email" value="{{ $user->email }}" required
+                                    class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-emerald-200 text-sm font-bold placeholder:text-slate-300 transition-all"
+                                    placeholder="name@example.com">
+                            </div>
+                            
+                            <div>
+                                <label for="role" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 ml-4">User Role *</label>
+                                <select name="role" id="role" required
+                                    class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-emerald-200 text-sm font-bold transition-all">
+                                    <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User / Staff</option>
+                                    <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Administrator</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password (Leave
-                                blank to keep current):</label>
-                            <input type="password" name="password" id="password"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                        <div class="pt-6 border-t border-slate-50">
+                            <div class="flex items-center space-x-2 mb-6 ml-4">
+                                <i class="fas fa-key text-pink-400"></i>
+                                <h4 class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Security (Optional)</h4>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <label for="password" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 ml-4">New Password</label>
+                                    <input type="password" name="password" id="password"
+                                        class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-emerald-200 text-sm font-bold placeholder:text-slate-300 transition-all"
+                                        placeholder="Leave blank to keep same">
+                                </div>
+                                
+                                <div>
+                                    <label for="password_confirmation" class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2 ml-4">Confirm New Password</label>
+                                    <input type="password" name="password_confirmation" id="password_confirmation"
+                                        class="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 focus:ring-2 focus:ring-emerald-200 text-sm font-bold placeholder:text-slate-300 transition-all"
+                                        placeholder="Leave blank to keep same">
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-4">
-                            <label for="password_confirmation"
-                                class="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-                        <div class="mb-4">
-                            <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Role:</label>
-                            <select name="role" id="role"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required>
-                                <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
-                                <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                            </select>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Update User
-                            </button>
-                            <a href="{{ route('admin.users.index') }}"
-                                class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                                Cancel
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex items-center justify-between pt-8 border-t border-slate-100">
+                        <a href="{{ route('admin.users.index') }}" class="inline-flex items-center px-8 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all">
+                            <i class="fas fa-times mr-2"></i>
+                            Cancel
+                        </a>
+                        <button type="submit" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 hover:shadow-xl hover:scale-105 transition-all">
+                            <i class="fas fa-save mr-2"></i>
+                            Update User
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
