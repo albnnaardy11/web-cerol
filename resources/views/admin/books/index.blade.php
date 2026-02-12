@@ -1,40 +1,39 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="font-extrabold text-3xl text-slate-900 leading-tight tracking-tight">
-                    Books Management
-                </h2>
-                <p class="text-slate-500 text-sm mt-1 font-medium">Manage your library collection</p>
-            </div>
-            <a href="{{ route('admin.books.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
-                <i class="fas fa-plus-circle mr-2"></i>
-                Add New Book
-            </a>
-        </div>
+        <x-page-header 
+            title="Books Management" 
+            subtitle="Manage your library collection"
+        >
+            <x-slot name="actions">
+                <a href="{{ route('admin.books.create') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Add New Book
+                </a>
+            </x-slot>
+        </x-page-header>
     </x-slot>
 
     <div class="py-12 bg-gradient-to-br from-slate-50 via-pink-50/30 to-blue-50/30 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             <!-- Search Bar -->
-            <div class="bg-white rounded-[2.5rem] p-8 shadow-lg shadow-slate-100 border border-slate-100 mb-8">
+            <x-premium-card padding="p-8" class="mb-8">
                 <form action="{{ route('admin.books.index') }}" method="GET" class="flex items-center space-x-4">
                     <div class="flex-1 relative">
                         <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         <input type="text" name="search" placeholder="Search by title or author..." value="{{ request('search') }}"
                             class="w-full bg-slate-50 border-none rounded-2xl py-4 pl-14 pr-6 focus:ring-2 focus:ring-pink-200 text-sm font-medium placeholder:text-slate-400">
                     </div>
-                    <button type="submit" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl hover:scale-105 transition-all">
+                    <x-primary-button class="!py-4 shadow-blue-200 !bg-gradient-to-r from-blue-500 to-indigo-500">
                         <i class="fas fa-search mr-2"></i>Search
-                    </button>
+                    </x-primary-button>
                     @if(request('search'))
                         <a href="{{ route('admin.books.index') }}" class="px-6 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all">
                             <i class="fas fa-times mr-2"></i>Clear
                         </a>
                     @endif
                 </form>
-            </div>
+            </x-premium-card>
 
             @if(session('success'))
                 <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-5 rounded-[2.5rem] mb-8 flex items-center shadow-lg shadow-emerald-200 animate-fade-in-down">
@@ -49,7 +48,7 @@
             <!-- Books Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 @foreach($books as $book)
-                    <div class="group bg-white rounded-[2.5rem] p-6 shadow-lg shadow-slate-100 border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col">
+                    <x-premium-card padding="p-6" class="group flex flex-col">
                         <!-- Book Cover -->
                         <div class="relative h-64 rounded-[2rem] overflow-hidden mb-6 bg-slate-50">
                             @if($book->image)
@@ -83,23 +82,23 @@
 
                         <!-- Actions -->
                         <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                            <a href="{{ route('admin.books.edit', $book) }}" class="flex-1 text-center px-4 py-3 bg-blue-50 text-blue-600 font-bold rounded-xl hover:bg-blue-500 hover:text-white transition-all">
+                            <a href="{{ route('admin.books.edit', $book) }}" class="flex-1 text-center px-4 py-3 bg-blue-50 text-blue-600 font-bold rounded-xl hover:bg-blue-500 hover:text-white transition-all text-xs">
                                 <i class="fas fa-edit mr-1"></i>Edit
                             </a>
                             <form action="{{ route('admin.books.destroy', $book) }}" method="POST" class="flex-1" onsubmit="return confirm('Are you sure you want to delete this book?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-full px-4 py-3 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                                <button type="submit" class="w-full px-4 py-3 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-500 hover:text-white transition-all text-xs">
                                     <i class="fas fa-trash mr-1"></i>Delete
                                 </button>
                             </form>
                         </div>
-                    </div>
+                    </x-premium-card>
                 @endforeach
             </div>
 
             @if($books->isEmpty())
-                <div class="bg-white rounded-[3rem] p-20 text-center shadow-lg shadow-slate-100 border border-slate-100">
+                <x-premium-card padding="p-20" class="text-center">
                     <div class="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-8">
                         <i class="fas fa-book text-5xl text-slate-300"></i>
                     </div>
@@ -114,7 +113,7 @@
                     <a href="{{ route('admin.books.create') }}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-pink-200 hover:shadow-xl hover:scale-105 transition-all">
                         <i class="fas fa-plus-circle mr-2"></i>Add Your First Book
                     </a>
-                </div>
+                </x-premium-card>
             @endif
 
             <!-- Pagination -->
